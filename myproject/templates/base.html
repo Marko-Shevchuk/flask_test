@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %} Base {% endblock %} - My Webpage</title>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href='{{url_for("index")}}'>Homepage</a></li>
+            <li><a href='{{url_for("posts")}}'>Posts</a></li>
+            <li><a href='{{url_for("about")}}'>About</a></li>
+            <li><a href='{/post/{{idx}}}'>Post idx {{idx}}</a></li>
+        </ul>
+    </nav>
+{% block body %}
+<h1>From base template</h1>
+{% endblock %}    
+</body>
+</html>
