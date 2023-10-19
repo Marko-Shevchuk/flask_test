@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %} Posts {% endblock %}
+{% block body %}
+{{ super() }}
+<br>
+<div class="container">
+    <div class="row">
+        <div class="col-6">
+            <div class="card">
+                <img class="card-img-top image-cons" src="{{url_for('static', filename='../static/images/red1.png')}}" alt="Card image cap">
+                <div class="card-body">
+                  <p class="card-text" style="min-height:20vh">Did you see <a href="https://www.youtube.com/watch?v=pd0s-xpAVJw">this</a> new cooking recipe by Adam Ragusea? I was completely shocked by how simple it is. Way to go, Adam! I also ████████████ ██</p>
+                </div>
+              </div>
+        </div>
+        <div class="col-6">
+            <div class="card">
+                <img class="card-img-top image-cons" src="{{url_for('static', filename='../static/images/red2.png')}}" alt="Card image cap">
+                <div class="card-body">
+                    <p class="card-text" style="min-height:20vh">What happened in ███ndamia yesterday was completely unacceptable. We should take control of things while it is possible. ███████████████████████████ █████ █████ ██████████ ██ █</p>
+                </div>
+              </div>
+        </div>
+    </div><br>
+    <div class="row">
+        <div class="col-6">
+            <div class="card" >
+                <img class="card-img-top image-cons" src="{{url_for('static', filename='../static/images/red3.png')}}" alt="Card image cap">
+                <div class="card-body">
+                    <p class="card-text" style="min-height:20vh">Why did the chicken cross the road? To get to the other side and ██████ ████████████████ █████ ███ █ █ █████ ██████ ████ ██ █</p>
+                </div>
+              </div>
+        </div>
+        <div class="col-6">
+            <div class="card" >
+                <img class="card-img-top image-cons" src="{{url_for('static', filename='../static/images/red4.png')}}" alt="Card image cap">
+                <div class="card-body">
+                    <p class="card-text" style="min-height:20vh">██████████ ████ sus ██████████ ████████ s████████████████ █d██ ███a█ ████ m█ment</p>
+                </div>
+              </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

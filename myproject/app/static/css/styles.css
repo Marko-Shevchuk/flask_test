@@ -1,0 +1,12 @@
+.image-cons {
+    aspect-ratio: 122/100;
+    min-width: 300px;
+}
+.image-cons2 {
+    aspect-ratio: 222/100;
+    min-width: 300px;
+}
+.pinky {
+    background-color: rgb(252, 208, 218);
+    background: linear-gradient(90deg, rgba(252,208,218,1) 0%, rgba(252,208,218,1) 0%, rgba(254,229,180,1) 100%);
+}
