@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %} Base {% endblock %} - My Webpage</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='../static/css/bootstrap.css') }}">
+    {% block styles %}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='../static/css/styles.css') }}">
+    {% endblock %}
+</head>
+<body class="pinky">
+    <nav class="navbar navbar-expand-lg navbar-light bg-white">
+        <a class="navbar-brand" href="#">██ █ ████████</a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item"><a class="nav-link" href='{{url_for("home")}}'>Homepage</a></li>
+                <li class="nav-item"><a class="nav-link" href='{{url_for("posts")}}'>Posts</a></li>
+                <li class="nav-item"><a class="nav-link" href='{{url_for("about")}}'>About</a></li>
+                <li class="nav-item"><a class="nav-link" href='{{url_for("skills")}}'>Skills</a></li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        {% block body %}
+        <h1 style="text-align: center;">Hi, I'm ██ █ ████████!</h1>
+        {% endblock %}
+    </div>
+      <br>
+    <footer class="footer bg-white">
+        <div class="container">
+          <div class="row">
+            <div class="col text-justify text-center justify-content-between">OS: {{ data[0] }}</div>
+            <div class="col text-justify text-center justify-content-between">Date: {{ data[1] }}</div>
+            <div class="col text-justify text-center justify-content-between">User agent: {{ data[2] }}</div>
+          </div>
+        </div>
+    </footer>
+    <script type="text/javascript" src='{{url_for("static", filename="../static")}}'></script>
+</body>
+</html>

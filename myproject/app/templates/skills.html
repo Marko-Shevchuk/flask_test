@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %} Skills {% endblock %}
+{% block body %}
+{{ super() }}
+<div class="jumbotron jumbotron-fluid">
+    <div class="container">
+      <h1 class="display-4">My skills include:</h1>
+      {% if skill in skills %}
+      <p class="lead">{{ skill }}</p>
+    {% else %}
+    {% for skill in skills %}
+    <p class="lead">{{ skill }}</p>
+    {% endfor %}
+    <p class="lead">Total amount of relevant skills: {{ skills_len }}</p>
+    {% endif %}
+      
+    </div>
+  </div>
+  <br>
+
+<form id="find_skill" class="row d-flex justify-content-center w-40 gap-2">
+    <div class="row d-flex justify-content-center">
+        <div class="col-md-10">
+            <input type="text" class="form-control" id="skill" name="skill" placeholder="Enter skill name" required>
+        </div>
+    </div>
+    <div class="row d-flex justify-content-center">
+        <div class="col-auto">
+            <button class="btn btn-primary">Search</button>
+        </div>
+    </div>
+</form>
+<br>
+  <div class="container">
+    <div class="row">
+        <div class="col-4"></div>
+        <div class="col-4">
+          <div class="card" >
+            <img class="card-img-top" src="{{url_for('static', filename='../static/images/face.png')}}" alt="Card image cap">
+            <div class="card-body">
+              <p class="card-text">Don't forget to smile!</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-4"></div>
+  </div>
+</div>
+  
+
+{% endblock %}

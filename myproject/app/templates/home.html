@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %} Home {% endblock %}
+{% block body %}
+{{ super() }}
+<div class="jumbotron">
+    <h1 class="display-4">Welcome!</h1>
+    <p class="lead">I am excited to ████████ ███████ ████. This ██████ █ ████ my passion for ████████ ████████████ ████████████████ ████on to ████████████ in the field of ████. Th██ ██████████ ████, I aim to demonstrate my ████████████ ████████ in ████████ and beyond.</p>
+    <hr class="my-4">
+    <p>Feel free to explore the various ████████████ ████ ████████ to gain insights into my ████████████████ j████████ and the ████████████ I've u████████████.</p>
+    
+  </div>
+<div class="container">
+  <div class="row">
+    <div class="col-4">
+      <div class="card" >
+        <img class="card-img-top image-cons" src="{{url_for('static', filename='../static/images/redacted_s.png')}}" alt="Card image cap">
+        <div class="card-body">
+          <p class="card-text">This is what I look like ❤️❤️❤️</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-4">
+      <div class="card" >
+        <img class="card-img-top image-cons" src="{{url_for('static', filename='../static/images/redacted_w.png')}}" alt="Card image cap">
+        <div class="card-body">
+          <p class="card-text">This is what I like doing ⭐</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-4">
+      <div class="card">
+        <img class="card-img-top image-cons" src="{{url_for('static', filename='../static/images/redacted_location.png')}}" alt="Card image cap">
+        <div class="card-body">
+          <p class="card-text">This is where I live 🏠🌳</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+</div>
+<br>
+<div class="row">
+  <div class="col-md-4">
+    <h2>You know what they say...</h2>
+    <p>D███ i█ ████ n████ m█ p█████ g█████ a█ e████ █████. ███e d████████, ████████████████████, ██████r m██████ c████████ n█████.</p>
+  </div>
+  <div class="col-md-4">
+    <h2>Never forget!</h2>
+    <p>A█████ v████████ █████████ ██████. A█████ l██ l████, p████████ █, c████████ v████, e████████ █, e███. A█████ l███ a███, d█████ █, v█████ q███, f███████ a, t█████. P████████ v█████ n███ u█ m███ v████ l███████.</p>
+  </div>
+  <div class="col-md-4">
+    <h2>Cheer up:</h2>
+    <p>N██ q███ n███, b█████ v█, l███ p███████, h████████ i█, l███. M███████ n██ ███ e█ a█ t███████ t█████. D████ v████ s████ u█ l███ v███████ f███████.</p>
+  </div>
+</div>
+{% endblock %}
