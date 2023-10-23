@@ -12,6 +12,34 @@
             <button type="submit">Logout</button>
         </form>
       </p>
+      <h2>Add or Delete Cookies</h2>
+      <form action="{{ url_for('info') }}" method="post">
+        <input type="text" name="key" placeholder="Key">
+        <input type="text" name="value" placeholder="Value">
+        <input type="date" name="expiration" placeholder="Expiration Date">
+        <button type="submit" name="action" value="add">Add Cookie</button>
+      </form>
+      <form action="{{ url_for('info') }}" method="post">
+        <input type="text" name="key" placeholder="Key to delete, or 'all'">
+        <button type="submit" name="action" value="delete">Delete Cookie</button>
+      </form>
+      <h2>Current Cookies</h2>
+      <table border="1">
+        <tr>
+          <th>Key</th>
+          <th>Value</th>
+          <th>Expiration Date</th>
+          <th>Creation Time</th>
+        </tr>
+        {% for key, value in cookies.items() %}
+          <tr>
+            <td>{{ key }}</td>
+            <td style='max-width:500px;'>{{ value }}</td>
+            <td>{{ request.cookies[key].expires }}</td>
+            <td>{{ request.cookies[key]['creation_time'] }}</td>
+          </tr>
+        {% endfor %}
+      </table>
     </div>
-  </div>
+</div>
 {% endblock %}

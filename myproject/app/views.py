@@ -31,18 +31,8 @@ def skills():
     skill = request.args.get("skill", None)
 
     return render_template("skills.html", data=data, skills=my_skills, skill=skill, skills_len=len(my_skills))
-#http://127.0.0.1:5000/query?name=admin&password=1234
 
 
-@app.route('/query', methods=["GET", "POST"])
-def form():
-    data = [os.name, datetime.datetime.now(), request.user_agent]
-    if request.method == "POST":
-        name = request.form.get("name")
-        password = request.form.get("password")
-        if name == "admin" and password == "1234":
-            return redirect(url_for("home"))
-    return render_template("my_form.html", data=data)
 
 #http://127.0.0.1:5000/setcookie?userId=101
 @app.route('/setcookie', methods=["GET"])
@@ -65,7 +55,7 @@ def cookie():
 def clear_cookie():
     data = [os.name, datetime.datetime.now(), request.user_agent]
     resp = make_response(f"Hi, delete  ")
-    # resp.set_cookie("userId", "", expires=0)
+    resp.set_cookie("userId", "", expires=0)
     resp.delete_cookie("userId")
     return resp
 
@@ -86,9 +76,34 @@ def login():
             return redirect(url_for('info'))
     return render_template('login.html', data=data)
 
-@app.route('/info')
+@app.route('/info', methods=['GET', 'POST'])
 def info():
     data = [os.name, datetime.datetime.now(), request.user_agent]
+    message=""
+    cookies = {}
     if 'username' in session:
-        return render_template('info.html', username=session["username"], data=data)
+        if request.method == 'POST':
+            key = request.form['key']
+            value = request.form['value']
+            expiration = request.form['expiration']  
+            cookies = request.cookies if request.cookies else {"none": "none"}
+            if request.form['action'] == 'add':
+                message = "Cookie added successfully!"
+                response = make_response(render_template('info.html', username=session['username'], cookies=cookies, data=data, message=message))
+                response.set_cookie(key, value, expires=datetime.datetime.strptime(expiration, '%Y-%m-%d'))
+                return response
+            elif request.form['action'] == 'delete':
+                if key == 'all':
+                    for key in request.cookies:
+                        response.set_cookie(key, '', expires=0)
+                    message = "All cookies deleted successfully!"
+                    response = make_response(render_template('info.html', username=session['username'], cookies=cookies, data=data, message=message))
+                    return response
+                else:
+                    message = "Cookie deleted successfully!"
+                    response = make_response(render_template('info.html', username=session['username'], cookies=cookies, data=data, message=message))
+                    response.set_cookie(key, '', expires=0)
+                    return response
+
+        return render_template('info.html', username=session['username'], cookies=cookies, data=data)
     return redirect(url_for('login'), data=data)
