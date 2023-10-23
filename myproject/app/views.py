@@ -69,11 +69,10 @@ def clear_cookie():
     resp.delete_cookie("userId")
     return resp
 
-@app.route('/clearsession', methods=["GET"])
-def clear_session():
-    data = [os.name, datetime.datetime.now(), request.user_agent]
-    session.pop("userId")
-    return redirect(url_for("home"))
+@app.route('/logout', methods=["GET"])
+def logout():
+    session.pop("username")
+    return redirect(url_for("login"))
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():

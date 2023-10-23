@@ -7,6 +7,11 @@
       <h1 class="display-4">Hello, {{username}}!</h1>
       <p class="lead"></p>
       <p class="lead">You are definitely authorized.</p>
+      <p class="lead">
+        <form action="{{ url_for('logout') }}" method="get">
+            <button type="submit">Logout</button>
+        </form>
+      </p>
     </div>
   </div>
 {% endblock %}
