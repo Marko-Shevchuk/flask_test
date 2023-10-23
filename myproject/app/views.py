@@ -51,13 +51,7 @@ def cookie():
 
     return render_template("read_cookie.html", userID=userId)
 
-@app.route('/clearcookie', methods=["GET"])
-def clear_cookie():
-    data = [os.name, datetime.datetime.now(), request.user_agent]
-    resp = make_response(f"Hi, delete  ")
-    resp.set_cookie("userId", "", expires=0)
-    resp.delete_cookie("userId")
-    return resp
+
 
 @app.route('/logout', methods=["GET"])
 def logout():
@@ -70,7 +64,6 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        print(f"DEEEEEEE {username} {password}")
         if username in users and users[username] == password:
             session['username'] = username
             return redirect(url_for('info'))
@@ -87,6 +80,12 @@ def info():
             value = request.form['value']
             expiration = request.form['expiration']  
             cookies = request.cookies if request.cookies else {"none": "none"}
+            if 'change_password' in request.form and users[session['username']] == request.form['old_password']:
+                new_password = request.form['new_password']
+                users[session['username']] = new_password  
+                with open('users.json', 'w') as f:
+                    json.dump(users, f)  # save updated users
+                message = "Password changed successfully."
             if request.form['action'] == 'add':
                 message = "Cookie added successfully!"
                 response = make_response(render_template('info.html', username=session['username'], cookies=cookies, data=data, message=message))

@@ -23,6 +23,12 @@
         <input type="text" name="key" placeholder="Key to delete, or 'all'">
         <button type="submit" name="action" value="delete">Delete Cookie</button>
       </form>
+      <h2>Change Password</h2>
+        <form action="{{ url_for('info') }}" method="post">
+            <input type="password" name="old_password" placeholder="Old Password">
+            <input type="password" name="new_password" placeholder="New Password">
+            <input type="submit" name="change_password" value="Change Password">
+        </form>
       <h2>Current Cookies</h2>
       <table border="1">
         <tr>
