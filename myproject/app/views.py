@@ -3,7 +3,7 @@ import os
 from flask import render_template, request, redirect, url_for, make_response, session
 from app import app
 import json
-
+from app.forms import LoginForm # .forms
 
 with open('users.json') as f:
     users = json.load(f)
@@ -58,6 +58,8 @@ def logout():
     session.pop("username")
     return redirect(url_for("login"))
 
+
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     data = [os.name, datetime.datetime.now(), request.user_agent]
@@ -106,3 +108,5 @@ def info():
 
         return render_template('info.html', username=session['username'], cookies=cookies, data=data)
     return redirect(url_for('login'), data=data)
+
+
