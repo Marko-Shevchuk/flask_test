@@ -11,7 +11,7 @@
 
 <br>
     <form action="{{ url_for('login')}}" method="post" class="row d-flex justify-content-center w-25 gap-3 needs-validation" novalidate>
-      {{ login_form.hidden_tag() }}
+      {{ login_form.csrf_token() }}
       <div class="row d-flex justify-content-center">
           <div class="col-md-10">
               {{ render_field(login_form.login, class='form-control') }}
