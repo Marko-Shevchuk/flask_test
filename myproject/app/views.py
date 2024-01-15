@@ -108,12 +108,7 @@ def login_handle():
     session['login_form_password_errors'] = login_form.password.errors
     return redirect(url_for('login'))
 
-def info():
 
-    change_password_form = ChangePassword()
-    if 'form_cp_errors' in session:
-        change_password_form.new_password.errors = session.pop('form_cp_errors')
-    return render('user/info', cookies=cookies, change_password_form=change_password_form)
 @app.route('/info', methods=['GET', 'POST'])
 def info():
     data = [os.name, datetime.datetime.now(), request.user_agent]
