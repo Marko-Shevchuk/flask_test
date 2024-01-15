@@ -13,13 +13,23 @@
         <a class="navbar-brand" href="#">██ █ ████████</a>
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item"><a class="nav-link" href='{{url_for("home")}}'>Homepage</a></li>
-                <li class="nav-item"><a class="nav-link" href='{{url_for("posts")}}'>Posts</a></li>
-                <li class="nav-item"><a class="nav-link" href='{{url_for("about")}}'>About</a></li>
-                <li class="nav-item"><a class="nav-link" href='{{url_for("skills")}}'>Skills</a></li>
+                {% for name, path in menu.items() %}
+                <li class="nav-item"><a class="nav-link" href="{{ url_for(path) }}">{{ name }}</a></li>
+                {% endfor %}
+            
             </ul>
         </div>
     </nav>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, text in messages %}
+                <div class="alert alert-{{ category }} mt-4" role="alert">
+                    {{ text }}
+                </div>
+                {% endfor %}
+        {% endif %}
+    {% endwith %}
+    
     <div class="container">
         {% block body %}
         <h1 style="text-align: center;">Hi, I'm ██ █ ████████!</h1>
