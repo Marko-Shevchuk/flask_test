@@ -17,7 +17,7 @@ class LoginForm(FlaskForm):
     submit = SubmitField("Sign in")
 class ChangePasswordForm(FlaskForm):
     old_password = PasswordField("Old Password",
-                                 render_kw={"placeholder": "New Password"},
+                                 render_kw={"placeholder": "Old Password"},
                                  validators=[
                                      DataRequired(message="Password cannot be empty."),
                                      Length(min=4, max=10)
