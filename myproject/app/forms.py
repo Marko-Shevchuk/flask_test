@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, PasswordField, BooleanField
+from wtforms import StringField, SubmitField, PasswordField, BooleanField, TextAreaField, SelectField
 from wtforms.validators import DataRequired, Length
+from app.domain.Todo import Status
 class LoginForm(FlaskForm):
     login = StringField("Login",
                         render_kw={"placeholder": "Login"},
@@ -29,3 +30,22 @@ class ChangePasswordForm(FlaskForm):
                                      Length(min=4, max=10)
                                  ])
     submit = SubmitField("Submit")
+class AddTask(FlaskForm):
+    name = StringField("Name",
+                       render_kw={"placeholder": "Task name"},
+                       validators=[
+                           DataRequired(message="Task name required.")
+                       ])
+    description = TextAreaField("Description", render_kw={"placeholder": "Description"})
+    submit = SubmitField("Add task")
+
+
+class UpdateTask(FlaskForm):
+    name = StringField("Name",
+                       render_kw={"placeholder": "Task name"},
+                       validators=[
+                           DataRequired(message="Task name required.")
+                       ])
+    description = TextAreaField("Description", render_kw={"placeholder": "Description"})
+    status = SelectField("Status", choices=Status.get_dropdown_values())
+    submit = SubmitField("Update task")
