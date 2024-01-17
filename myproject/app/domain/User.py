@@ -32,7 +32,6 @@ class User(db.Model):
             'login': self.username,
             'first_name': self.first_name,
             'last_name': self.last_name,
-            'birth_date': self.birth_date,
             'email': self.email,
             'phone_number': '+6942069420'
         }
