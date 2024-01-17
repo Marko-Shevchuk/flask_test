@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% from "macros/_formRender.html" import render_field %}
+{% block title %}
+    Add a task
+{% endblock %}
+{{ super() }}
+
+{% block body %}
+
+    <div style="height: 100%; display: flex; justify-content: center; align-items: center; flex-direction: column; gap: 3rem">
+        
+        <h1>Add Task</h1>
+        <form action="{{ url_for('add_task') }}" method="post"
+              class="row d-flex justify-content-center w-80 gap-1">
+            {{ form.csrf_token() }}
+            <div class="row d-flex justify-content-center">
+                <div class="col-md-11">
+                    {{ render_field(form.name, class='form-control') }}
+                </div>
+            </div>
+            <div class="row d-flex justify-content-center">
+                <div class="col-md-11">
+                    {{ render_field(form.description, class='form-control') }}
+                </div>
+            </div>
+            <div class="row d-flex justify-content-center">
+                <div class="col-auto">
+                    {{ form.submit() }}
+                </div>
+            </div>
+        </form>
+    </div>
+
+{% endblock %}

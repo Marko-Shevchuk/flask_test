@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% from "macros/_formRender.html" import render_field %}
 {% block title %} Login {% endblock %}
+
 {% block body %}
 {% if session.get('logout') %}
         <div class="alert alert-danger mt-4" role="alert">
@@ -10,35 +11,24 @@
 {{ super() }}
 
 <br>
-    <form action="{{ url_for('login')}}" method="post" class="row d-flex justify-content-center w-25 gap-3 needs-validation" novalidate>
-      {{ login_form.csrf_token() }}
-      <div class="row d-flex justify-content-center">
-          <div class="col-md-10">
-              {{ render_field(login_form.login, class='form-control') }}
-          </div>
-      </div>
-
-      <div class="row d-flex justify-content-center">
-          <div class="col-md-10">
-              {{ render_field(login_form.password, class='form-control') }}
-          </div>
-      </div>
-
-      <div class="row d-flex justify-content-center">
-          <div class="col-auto mx-auto form-check text-center">
-              {{ render_field(login_form.remember, class='form-check-input') }}
-              <label class="form-check-label">
-                  {{ login_form.remember.label }}
-              </label>
-          </div>
-      </div>
-
-      <div class="row d-flex justify-content-center">
-          <div class="col-auto">
+<div class="container-fluid">
+    <form action="{{ url_for('login')}}" method="post" class="mx-auto w-25 needs-validation" novalidate>
+        {{ login_form.csrf_token() }}
+        <div class="mb-3">
+            {{ render_field(login_form.login, class='form-control') }}
+        </div>
+        <div class="mb-3">
+            {{ render_field(login_form.password, class='form-control') }}
+        </div>
+        <div class="mb-3 form-check text-center">
+            {{ render_field(login_form.remember, class='form-check-input') }}
+            <label class="form-check-label">
+                {{ login_form.remember.label }}
+            </label>
+        </div>
+        <div class="text-center">
             {{ login_form.submit() }}
-          </div>
-      </div>
-  </form>
-  <div style="height: 50vh"></div>
-
+        </div>
+    </form>
+</div>
 {% endblock %}
