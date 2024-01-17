@@ -1,16 +1,34 @@
 {% extends "base.html" %}
+{% from "macros/_formRender.html" import render_field %}
 {% block title %} Login {% endblock %}
+
 {% block body %}
+{% if session.get('logout') %}
+        <div class="alert alert-danger mt-4" role="alert">
+            {{ session.pop('logout') }}
+        </div>
+    {% endif %}
 {{ super() }}
-<form action="{{url_for('login')}}" method="POST">
-    <div class="form-group">
-      <label for="exampleInputUser1">Username</label>
-      <input type="text" name="username" class="form-control" id="exampleInputEmail1" aria-describedby="userHelp" placeholder="Enter username">
-    </div>
-    <div class="form-group">
-      <label for="exampleInputPassword1">Password</label>
-      <input type="password" name="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
-    </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
-  </form>
+
+<br>
+<div class="container-fluid">
+    <form action="{{ url_for('login')}}" method="post" class="mx-auto w-25 needs-validation" novalidate>
+        {{ login_form.csrf_token() }}
+        <div class="mb-3">
+            {{ render_field(login_form.login, class='form-control') }}
+        </div>
+        <div class="mb-3">
+            {{ render_field(login_form.password, class='form-control') }}
+        </div>
+        <div class="mb-3 form-check text-center">
+            {{ render_field(login_form.remember, class='form-check-input') }}
+            <label class="form-check-label">
+                {{ login_form.remember.label }}
+            </label>
+        </div>
+        <div class="text-center">
+            {{ login_form.submit() }}
+        </div>
+    </form>
+</div>
 {% endblock %}

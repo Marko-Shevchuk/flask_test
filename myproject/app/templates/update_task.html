@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% from "macros/_formRender.html" import render_field %}
+{% block title %}
+    Update task
+{% endblock %}
+{{ super() }}
+
+{% block body %}
+
+    <div class="largediv">
+        
+        <h1>Edit Task</h1>
+        <form action="{{ url_for('update_task', id=task.id) }}" method="post" class="w-50 mx-auto">
+    {{ form.csrf_token() }}
+
+    <div class="row mb-3">
+        <div class="col-md-12">
+            {{ render_field(form.name, class='form-control', value=task.name) }}
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-md-12">
+            <textarea class="form-control" name="{{ form.description.name }}" id="{{ form.description.id }}" cols="20" rows="8">{{ task.description }}</textarea>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-md-12">
+            <select class='form-select' name="{{ form.status.name }}" id="{{ form.status.id }}">
+                {% for choices in form.status.choices %}
+                    <option value="{{ choices[0] }}" {% if task.status.name == choices[0] %}
+                            selected {% endif %}>
+                        {{ choices[1] }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-md-12 text-center">
+            {{ form.submit() }}
+        </div>
+    </div>
+</form>
+    </div>
+
+{% endblock %}

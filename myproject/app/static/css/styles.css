@@ -6,7 +6,26 @@
     aspect-ratio: 222/100;
     min-width: 300px;
 }
+.container-space {
+    flex: 1;
+}
 .pinky {
     background-color: rgb(252, 208, 218);
     background: linear-gradient(90deg, rgba(252,208,218,1) 0%, rgba(252,208,218,1) 0%, rgba(254,229,180,1) 100%);
+    min-height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+}
+.footer {
+    position: sticky;
+    bottom: 0;
+    width: 100%;
+}
+.largediv {
+    height: 
+    100%; display: flex; 
+    align-items: center; 
+    flex-direction: column; 
+    gap: 1rem;
 }

@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% from "macros/_formRender.html" import render_field %}
+{% block title %}
+    Todo
+{% endblock %}
+{{ super() }}
+
+{% block body %}
+
+    
+
+<div class="largediv">
+    
+    <h1>Todo</h1>
+    <div class="container-lg w-70">
+        {% if session.get('username') != None %}
+    <a href="{{ url_for('add_task') }}" role="button" tabindex="-1" class="w-30 mx-auto mt-2 btn btn-secondary">Add Task</a>
+{% endif %}
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Description</th>
+                <th scope="col">Status</th>
+            </tr>
+            </tr>
+            </thead>
+            <tbody>
+            {% for task in tasks %}
+                <tr>
+                    <th scope="row">{{ loop.index }}</th>
+                    <td>{{ task.name }}</td>
+                    <td><span style="max-width: 15rem; display: inline-block;" class="text-truncate">{{ task.description }}</span></td>
+                    <td>{{ task.status.value }}</td>
+                    {% if session.get('username') != None %}
+                        <td>
+                            <a href="{{ url_for('update_task', id=task.id) }}">
+                                <button class="btn btn-blue">
+                                    Update
+                                </button>
+                            </a>
+                        </td>
+                        <td>
+                            <a href="{{ url_for('delete_task', id=task.id) }}">
+                                <button class="btn btn-blue">
+                                    Delete
+                                </button>
+                            </a>
+                        </td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}
