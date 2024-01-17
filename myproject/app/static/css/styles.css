@@ -22,3 +22,10 @@
     bottom: 0;
     width: 100%;
 }
+.largediv {
+    height: 
+    100%; display: flex; 
+    align-items: center; 
+    flex-direction: column; 
+    gap: 1rem;
+}

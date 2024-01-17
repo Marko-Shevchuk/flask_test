@@ -4,8 +4,9 @@ from flask import render_template, request, redirect, url_for, make_response, se
 from app import app
 import json
 from app import db
-from app.forms import LoginForm, ChangePasswordForm, AddTask, UpdateTask 
+from app.forms import LoginForm, ChangePasswordForm, AddTask, UpdateTask, AddFeedback
 from app.domain.Todo import Task, Status
+from app.domain.Feedback import Satisfaction, Feedback
 
 with open('users.json') as f:
     users = json.load(f)
@@ -18,6 +19,7 @@ menu = {
     'Login': 'login',
     'Information': 'info',
     'Todo': 'todo',
+    'Feedback': 'feedback',
     'Logout': 'logout'
 }
 
@@ -257,3 +259,28 @@ def delete_task(id=None):
     db.session.commit()
     flash(f"Successfully deleted task {task.name}", category='success')
     return redirect(url_for('todo'))
+
+@app.route('/feedback', methods=['GET'])
+def feedback():
+    data = [os.name, datetime.datetime.now(), request.user_agent]
+    form = AddFeedback()
+    feedbacks = Feedback.query.all()
+    return render_template('feedback.html', form=form, feedbacks=feedbacks, data=data, menu=menu)
+
+
+@app.route('/feedback', methods=['POST'])
+def add_feedback():
+    data = [os.name, datetime.datetime.now(), request.user_agent]
+    form = AddFeedback()
+    if not form.validate_on_submit():
+        return render_template('feedback.html', form=form, data=data, menu=menu)
+
+    feedback = form.feedback.data
+    satisfaction = Satisfaction[form.satisfaction.data]
+
+    user = None if session.get('username') is None else session['username']['login']
+    entity = Feedback(feedback=feedback, satisfaction=satisfaction, user=user)
+    db.session.add(entity)
+    db.session.commit()
+    flash(f"Successfully added feedback.", category="success")
+    return redirect(url_for('feedback'))

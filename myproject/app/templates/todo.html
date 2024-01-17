@@ -9,7 +9,7 @@
 
     
 
-<div style="height: 100%; display: flex; justify-content: center; align-items: center; flex-direction: column; gap: 3rem">
+<div class="largediv">
     
     <h1>Todo</h1>
     <div class="container-lg w-70">
@@ -31,7 +31,7 @@
                 <tr>
                     <th scope="row">{{ loop.index }}</th>
                     <td>{{ task.name }}</td>
-                    <td><span style="max-width: 10rem; display: inline-block;" class="text-truncate">{{ task.description }}</span></td>
+                    <td><span style="max-width: 15rem; display: inline-block;" class="text-truncate">{{ task.description }}</span></td>
                     <td>{{ task.status.value }}</td>
                     {% if session.get('username') != None %}
                         <td>

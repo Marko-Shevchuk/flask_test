@@ -62,3 +62,4 @@ class AddFeedback(FlaskForm):
                               validators=[
                                   DataRequired(message="Rate your experience.")
                               ])
+    submit = SubmitField("Submit")
