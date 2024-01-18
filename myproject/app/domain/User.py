@@ -1,9 +1,10 @@
 from flask_bcrypt import generate_password_hash, check_password_hash
 from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy import Integer, String
+from sqlalchemy import Integer, String, DateTime
 from flask_login import UserMixin
-
+import datetime
 from app import db, login_manager
+from sqlalchemy.sql import func
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -17,7 +18,9 @@ class User(db.Model, UserMixin):
     last_name: Mapped[str] = mapped_column(String(32), nullable=False)
     password: Mapped[str] = mapped_column(String(256), nullable=False)
     email: Mapped[str] = mapped_column(String(256), unique=True, nullable=False, index=True)
-    image_file_name: Mapped[str] = mapped_column(String(240), nullable=True)
+    image_file_name: Mapped[str] = mapped_column(String(240), nullable=False, server_default='default.jpg')
+    about_me: Mapped[str] = mapped_column(String(512), nullable=True)
+    last_seen: Mapped[datetime.datetime] = mapped_column(DateTime, server_default=func.now(), nullable=False)
 
     @property
     def user_password(self):

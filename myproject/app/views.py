@@ -2,15 +2,20 @@ import datetime
 import os
 from flask import render_template, request, redirect, url_for, make_response, session, flash
 from app import app
-import json
+
 from app import *
-from app.forms import LoginForm, ChangePasswordForm, AddTask, UpdateTask, AddFeedback, RegisterForm
+from app.forms import UpdateUserForm, LoginForm, ChangePasswordForm, AddTask, UpdateTask, AddFeedback, RegisterForm
 from app.domain.Todo import Task, Status
 from app.domain.Feedback import Satisfaction, Feedback
 from app.domain.User import User
 from flask_login import login_user, current_user, login_required, logout_user
-with open('users.json') as f:
-    users = json.load(f)
+
+import os
+import uuid
+from PIL import Image
+
+IMAGES_FOLDER = 'app/static/images'
+IMAGES_DEFAULT_NAME = 'default.jpg'
 my_skills = ['Java', 'PHP', 'C++', 'MySQL','MPICH','OpenMP', 'JavaScript', 'Python', 'Spring Boot']
 menu = {
     'Homepage': 'home',
@@ -25,8 +30,24 @@ menu = {
     'Feedback': 'feedback',
     'Logout': 'logout'
 }
+def upload_file(file):
+    if not file:
+        return
 
+    filename, extension = file.filename.rsplit('.', 1)
+    uuid_name = uuid.uuid4()
+    secured_filename = f"{uuid_name}.{extension}"
+    path = os.path.join(IMAGES_FOLDER, secured_filename)
 
+    image = Image.open(file)
+    image.thumbnail((512, 512))
+    image.save(path)
+    return secured_filename
+
+def delete_file(file_name):
+    path = os.path.join(IMAGES_FOLDER, file_name)
+    if file_name != IMAGES_DEFAULT_NAME and os.path.exists(path):
+        os.remove(path)
 
 @app.route('/')
 def home():
@@ -73,7 +94,32 @@ def cookie():
 @login_required
 def account():
     data = [os.name, datetime.datetime.now(), request.user_agent]
-    return render_template("account.html", data=data, menu=menu)
+    form = UpdateUserForm()
+    form.about_me.data = current_user.about_me
+    return render_template("account.html", form=form, data=data, menu=menu)
+
+@app.route('/account', methods=['POST'])
+@login_required
+def update_account():
+    data = [os.name, datetime.datetime.now(), request.user_agent]
+    form = UpdateUserForm()
+    if not form.validate_on_submit():
+        return render_template('account.html', form=form, data=data, menu=menu)
+
+    current_user.username = form.username.data
+    current_user.email = form.email.data
+    current_user.first_name = form.first_name.data
+    current_user.last_name = form.last_name.data
+    current_user.about_me = form.about_me.data
+
+    if form.user_image.data:
+        delete_file(current_user.image_file_name)
+        current_user.image_file_name = upload_file(form.user_image.data)
+
+    db.session.commit()
+
+    flash('You successfully updated your account details!', category='success')
+    return redirect(url_for('account'))
 
 @app.route('/logout', methods=["GET"])
 @login_required
@@ -137,7 +183,9 @@ def register_handle():
     last_name = register_form.last_name.data
     email = register_form.email.data
     password = register_form.password.data
-    user = User(username=username,first_name = first_name, last_name = last_name, email = email,user_password = password)
+    image_file = register_form.user_image.data
+    image_file_name = upload_file(image_file)
+    user = User(username=username,first_name = first_name, last_name = last_name, email = email,user_password = password, image_file_name=image_file_name)
 
     db.session.add(user)
     db.session.commit()
@@ -312,3 +360,13 @@ def add_feedback():
     db.session.commit()
     flash(f"Successfully added feedback.", category="success")
     return redirect(url_for('feedback'))
+
+@app.after_request
+def after_request(response):
+    if current_user:
+        current_user.last_seen = datetime.datetime.now()
+        try:
+            db.session.commit()
+        except:
+            flash(f"Error updating last seen time.", category='danger')
+    return response
