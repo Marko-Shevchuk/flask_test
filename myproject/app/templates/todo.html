@@ -7,13 +7,22 @@
 
 {% block body %}
 
-    
+<style>
+    .container-lg {
+        background-color: lightyellow;
+        padding: 10px;
+        border-radius: 10px;
+        margin: auto;
+        margin-top: 5px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+</style>
 
 <div class="largediv">
     
     <h1>Todo</h1>
     <div class="container-lg w-70">
-        {% if session.get('username') != None %}
+        {% if session.get('user') != None %}
     <a href="{{ url_for('add_task') }}" role="button" tabindex="-1" class="w-30 mx-auto mt-2 btn btn-secondary">Add Task</a>
 {% endif %}
         <table class="table">
@@ -33,7 +42,7 @@
                     <td>{{ task.name }}</td>
                     <td><span style="max-width: 15rem; display: inline-block;" class="text-truncate">{{ task.description }}</span></td>
                     <td>{{ task.status.value }}</td>
-                    {% if session.get('username') != None %}
+                    {% if session.get('user') != None %}
                         <td>
                             <a href="{{ url_for('update_task', id=task.id) }}">
                                 <button class="btn btn-blue">

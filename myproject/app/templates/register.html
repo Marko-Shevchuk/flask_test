@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% from "macros/_formRender.html" import render_field %}
+{% block title %}
+    Register
+{% endblock %}
+{% block body %}
+<style>
+    form {
+        background-color: lightyellow;
+        padding: 10px;
+        border-radius: 10px;
+        margin: auto;
+        margin-top: 5px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+</style>
+<div class="largediv">
+
+    <h2 class="text-center mb-3">Sign up</h2>
+    <form action="{{ url_for('register_handle') }}" method="post"
+          class="w-50 gap-3" enctype="multipart/form-data">
+        {{ form.csrf_token() }}
+
+        <div class="mb-3">
+            {{ render_field(form.first_name, class='form-control') }}
+        </div>
+
+        <div class="mb-3">
+            {{ render_field(form.last_name, class='form-control') }}
+        </div>
+
+        <div class="mb-3">
+            {{ render_field(form.email, class='form-control') }}
+        </div>
+
+        <div class="mb-3">
+            {{ render_field(form.username, class='form-control') }}
+        </div>
+
+        <div class="mb-3">
+            {{ render_field(form.password, class='form-control') }}
+        </div>
+
+        <div class="mb-3">
+            {{ render_field(form.confirm_password, class='form-control') }}
+        </div>
+
+        <div class="mb-3">
+            {{ render_field(form.user_image, class='form-control', add_label=True, label_class='form-label') }}
+        </div>
+
+        <div class="text-center mb-3">
+            {{ form.submit() }}
+        </div>
+
+    </form>
+
+</div>
+{% endblock %}

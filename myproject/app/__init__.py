@@ -18,9 +18,4 @@ app=create_app()
 Migrate(app, db)
 
 
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String())
-    password = db.Column(db.String())
-
 from app import views

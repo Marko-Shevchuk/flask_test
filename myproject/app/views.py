@@ -4,9 +4,10 @@ from flask import render_template, request, redirect, url_for, make_response, se
 from app import app
 import json
 from app import db
-from app.forms import LoginForm, ChangePasswordForm, AddTask, UpdateTask, AddFeedback
+from app.forms import LoginForm, ChangePasswordForm, AddTask, UpdateTask, AddFeedback, RegisterForm
 from app.domain.Todo import Task, Status
 from app.domain.Feedback import Satisfaction, Feedback
+from app.domain.User import User
 
 with open('users.json') as f:
     users = json.load(f)
@@ -16,6 +17,7 @@ menu = {
     'Posts': 'posts',
     'About': 'about',
     'Skills': 'skills',
+    'Register': 'register',
     'Login': 'login',
     'Information': 'info',
     'Todo': 'todo',
@@ -70,8 +72,8 @@ def cookie():
 
 @app.route('/logout', methods=["GET"])
 def logout():
-    if 'username' in session:
-        session.pop("username")
+    if 'user' in session:
+        session.pop("user")
     return redirect(url_for("login"))
 
 
@@ -89,30 +91,54 @@ def login():
 
 @app.route('/login', methods=['POST'])
 def login_handle():
-    data = [os.name, datetime.datetime.now(), request.user_agent]
     login_form = LoginForm()
-    session['login_form_login_username'] = login_form.login.data
+    session['login_form_login_value'] = login_form.login.data
     if login_form.validate_on_submit():
-        with open('users.json', 'r') as users:
-            login_username = login_form.login.data
-            password = login_form.password.data
-            json_data = json.load(users)
-            if json_data.get(login_username) is not None:
-                user_data = json_data[login_username]
-                if user_data['password'] == password:
-                    del user_data['password'] 
-                    if login_form.remember.data:
-                        session['username'] = user_data
-                        session['username']['login'] = login_username
-                        session.pop('login_form_login_username')
-                    flash("You successfully logged in.", category="success")
-                    return redirect(url_for("info"))
+        entered_login = login_form.login.data
+        entered_password = login_form.password.data
+        user = User.query.filter(User.username == entered_login).first()
+        if not user or not user.verify_password(entered_password):
             flash("Invalid credentials.", category="danger")
             return redirect(url_for('login'))
+        if login_form.remember.data:
+            session['user'] = user.create_user_details()
+            session.pop('login_form_login_value')
+            flash("You successfully logged in.", category="success")
+            return redirect(url_for("info"))
     session['login_form_login_errors'] = login_form.login.errors
     session['login_form_password_errors'] = login_form.password.errors
     return redirect(url_for('login'))
 
+@app.route('/register', methods=['GET'])
+def register():
+    data = [os.name, datetime.datetime.now(), request.user_agent]
+    if session.get('user') is not None:
+        return redirect(url_for('info'))
+    form = RegisterForm()
+    return render_template('register.html', form=form, data=data, menu=menu)
+@app.route('/register', methods=['GET'])
+
+@app.route('/register', methods=['POST'])
+def register_handle():
+    data = [os.name, datetime.datetime.now(), request.user_agent]
+    register_form = RegisterForm()
+    if not register_form.validate_on_submit():
+        return render_template('register.html', form=register_form, data=data, menu=menu)
+    username = register_form.username.data
+    first_name = register_form.first_name.data
+    last_name = register_form.last_name.data
+    email = register_form.email.data
+    password = register_form.password.data
+    user = User(username=username)
+    user.first_name = first_name
+    user.last_name = last_name
+    user.email = email
+    user.user_password = password
+
+    db.session.add(user)
+    db.session.commit()
+    flash(f"Successfully created account {register_form.username.data}.", category='success')
+    return redirect(url_for('login'))
 
 @app.route('/info', methods=['GET', 'POST'])
 def info():
@@ -121,7 +147,7 @@ def info():
     cookies = {}
     change_password_form = ChangePasswordForm()
     
-    if 'username' in session:
+    if 'user' in session:
         if 'form_cp_errors' in session:
             change_password_form.new_password.errors = session.pop('form_cp_errors')
         if request.method == 'POST':
@@ -132,7 +158,7 @@ def info():
             
             if request.form['action'] == 'add':
                 message = "Cookie added successfully!"
-                response = make_response(render_template('info.html', username=session['username'], cookies=cookies, data=data, menu=menu, message=message, change_password_form=change_password_form))
+                response = make_response(render_template('info.html', username=session['user']['login'], cookies=cookies, data=data, menu=menu, message=message, change_password_form=change_password_form))
                 response.set_cookie(key, value, expires=datetime.datetime.strptime(expiration, '%Y-%m-%d'))
                 return response
             elif request.form['action'] == 'delete':
@@ -140,22 +166,22 @@ def info():
                     for key in request.cookies:
                         response.set_cookie(key, '', expires=0)
                     message = "All cookies deleted successfully!"
-                    response = make_response(render_template('info.html', username=session['username'], cookies=cookies, data=data, menu=menu, message=message, change_password_form=change_password_form))
+                    response = make_response(render_template('info.html', username=session['user']['login'], cookies=cookies, data=data, menu=menu, message=message, change_password_form=change_password_form))
                     return response
                 else:
                     message = "Cookie deleted successfully!"
-                    response = make_response(render_template('info.html', username=session['username'], cookies=cookies, data=data, menu=menu, message=message, change_password_form=change_password_form))
+                    response = make_response(render_template('info.html', username=session['user']['login'], cookies=cookies, data=data, menu=menu, message=message, change_password_form=change_password_form))
                     response.set_cookie(key, '', expires=0)
                     return response
         
-        return render_template('info.html', username=session['username']['login'], cookies=cookies, data=data, menu=menu, change_password_form=change_password_form)
+        return render_template('info.html', username=session['user']['login'], cookies=cookies, data=data, menu=menu, change_password_form=change_password_form)
     return redirect(url_for('login'))
 
 @app.route('/change_password', methods=['POST'])
 def change_password():
     change_password_form = ChangePasswordForm()
     if change_password_form.validate_on_submit():
-        user_login = session['username']['login']
+        user_login = session['user']['login']
         with open('users.json', 'r') as file:
             data = json.load(file)
         
@@ -181,7 +207,7 @@ def todo():
 @app.route('/todo/add', methods=['GET', 'POST'])
 def add_task():
     data = [os.name, datetime.datetime.now(), request.user_agent]
-    if session.get('username') is None:
+    if session.get('user') is None:
         return redirect(url_for('login'))
     add_task_form = AddTask()
     if request.method == 'GET':
@@ -206,7 +232,7 @@ def add_task():
 @app.route('/todo/<int:id>', methods=['GET'])
 def get_task(id=None):
     data = [os.name, datetime.datetime.now(), request.user_agent]
-    if session.get('username') is None:
+    if session.get('user') is None:
         return redirect(url_for('login'))
     if id is None:
         return redirect(url_for('todo'))
@@ -220,7 +246,7 @@ def get_task(id=None):
 @app.route('/todo/<int:id>', methods=['POST'])
 def update_task(id=None):
     data = [os.name, datetime.datetime.now(), request.user_agent]
-    if session.get('username') is None:
+    if session.get('user') is None:
         return redirect(url_for('login'))
     if id is None:
         return redirect(url_for('todo'))
@@ -249,7 +275,7 @@ def update_task(id=None):
 
 @app.route('/todo/<int:id>/delete')
 def delete_task(id=None):
-    if session.get('username') is None:
+    if session.get('user') is None:
         return redirect(url_for('login'))
     if id is None:
         return redirect(url_for('todo'))
@@ -278,7 +304,7 @@ def add_feedback():
     feedback = form.feedback.data
     satisfaction = Satisfaction[form.satisfaction.data]
 
-    user = None if session.get('username') is None else session['username']['login']
+    user = None if session.get('user') is None else session['user']['login']
     entity = Feedback(feedback=feedback, satisfaction=satisfaction, user=user)
     db.session.add(entity)
     db.session.commit()
