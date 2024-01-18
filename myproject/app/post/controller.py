@@ -1,11 +1,11 @@
-from flask import redirect, url_for, flash, request, render_template
+from flask import redirect, url_for, flash, request, render_template, current_app
 from flask_login import current_user, login_required
 from sqlalchemy import desc
 import os, datetime
 from app.general.controller import menu
 from app import db
-from app import profile
-from app.general.controller import upload_file, delete_file
+
+from app.auth.controller import upload_file, delete_file
 from app.domain.Post import Post, PostType
 from . import post_bp
 from .forms import PostForm, CategorySearchForm
@@ -109,7 +109,7 @@ def post_list():
     else:
         form.categories.errors = []
 
-    posts = query.order_by(desc(Post.created_at)).paginate(page=page, per_page=profile.POST_PAGINATION_SIZE)
+    posts = query.order_by(desc(Post.created_at)).paginate(page=page, per_page=current_app.config['POST_PAGINATION_SIZE'])
     return render_template('posts.html', posts=posts, form=form, data=data, menu=menu)
 
 

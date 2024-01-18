@@ -28,13 +28,14 @@ class PostForm(FlaskForm):
                        validators=[
                            DataRequired(message='Type selection is required.')
                        ])
-    categories = SelectField('Category',
-                             choices=[(category.id, category.name) for category in Category.query.all()],
-                             validators=[
-                                 DataRequired(message='Category selection is required.')
-                             ])
-    tags = SelectMultipleField('Tags', choices=[(tag.name, tag.name) for tag in Tag.query.all()],
-                               option_widget=CheckboxInput(), widget=ListWidget(prefix_label=False))
+    categories = SelectField('Category', coerce=int, validators=[
+                             DataRequired(message='Category selection is required.')])
+    tags = SelectMultipleField('Tags', coerce=int, option_widget=CheckboxInput(), widget=ListWidget(prefix_label=False))
+
+    def __init__(self, *args, **kwargs):
+        super(PostForm, self).__init__(*args, **kwargs)
+        self.categories.choices = [(category.id, category.name) for category in Category.query.all()]
+        self.tags.choices = [(tag.id, tag.name) for tag in Tag.query.all()]
     image = FileField('Profile picture',
                            render_kw={'placeholder': 'Image', 'accept': '.jpg, .jpeg, .png'})
     enabled = BooleanField('Enabled', default=True)
@@ -49,5 +50,8 @@ class PostForm(FlaskForm):
 
 
 class CategorySearchForm(FlaskForm):
-    categories = SelectField('Category',
-                             choices=[(category.id, category.name) for category in Category.query.all()])
+    categories = SelectField('Category', coerce=int)
+
+    def __init__(self, *args, **kwargs):
+        super(CategorySearchForm, self).__init__(*args, **kwargs)
+        self.categories.choices = [(category.id, category.name) for category in Category.query.all()]

@@ -14,6 +14,9 @@ menu = {
     'Information': 'cookie.info',
     'Todo': 'todo.todo',
     'Feedback': 'feedback.feedback',
+    'Posts': 'post.post_list',
+    'Categories': 'post.category.category_list',
+    'Tags': 'post.tag.tag_list',
     'Logout': 'auth.logout'
 }
 
