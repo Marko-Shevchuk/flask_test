@@ -8,7 +8,7 @@ from app.forms import LoginForm, ChangePasswordForm, AddTask, UpdateTask, AddFee
 from app.domain.Todo import Task, Status
 from app.domain.Feedback import Satisfaction, Feedback
 from app.domain.User import User
-from flask_login import current_user, login_required, logout_user
+from flask_login import login_user, current_user, login_required, logout_user
 with open('users.json') as f:
     users = json.load(f)
 my_skills = ['Java', 'PHP', 'C++', 'MySQL','MPICH','OpenMP', 'JavaScript', 'Python', 'Spring Boot']
@@ -107,6 +107,7 @@ def login_handle():
             session.pop('login_form_login_value')
             flash("You successfully logged in.", category="success")
             return redirect(url_for("info"))
+        login_user(user, remember=False)
     session['login_form_login_errors'] = login_form.login.errors
     session['login_form_password_errors'] = login_form.password.errors
     return redirect(url_for('login'))
