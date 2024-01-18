@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% from "macros/_formRender.html" import render_field %}
+{% block title %}
+    Account
+{% endblock %}
+{{ super() }}
+
+{% block body %}
+
+    <h1>{{current_user.username}}</h1>
+
+{% endblock %}

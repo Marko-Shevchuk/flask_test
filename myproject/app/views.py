@@ -3,12 +3,12 @@ import os
 from flask import render_template, request, redirect, url_for, make_response, session, flash
 from app import app
 import json
-from app import db
+from app import *
 from app.forms import LoginForm, ChangePasswordForm, AddTask, UpdateTask, AddFeedback, RegisterForm
 from app.domain.Todo import Task, Status
 from app.domain.Feedback import Satisfaction, Feedback
 from app.domain.User import User
-
+from flask_login import login_user, current_user, login_required, logout_user
 with open('users.json') as f:
     users = json.load(f)
 my_skills = ['Java', 'PHP', 'C++', 'MySQL','MPICH','OpenMP', 'JavaScript', 'Python', 'Spring Boot']
@@ -19,6 +19,7 @@ menu = {
     'Skills': 'skills',
     'Register': 'register',
     'Login': 'login',
+    'Account': 'account',
     'Information': 'info',
     'Todo': 'todo',
     'Feedback': 'feedback',
@@ -68,17 +69,23 @@ def cookie():
 
     return render_template("read_cookie.html", userID=userId)
 
-
+@app.route('/account', methods=["GET"])
+@login_required
+def account():
+    data = [os.name, datetime.datetime.now(), request.user_agent]
+    return render_template("account.html", data=data, menu=menu)
 
 @app.route('/logout', methods=["GET"])
+@login_required
 def logout():
-    if 'user' in session:
-        session.pop("user")
+    logout_user()
     return redirect(url_for("login"))
 
 
 @app.route('/login', methods=['GET'])
 def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('info'))
     data = [os.name, datetime.datetime.now(), request.user_agent]
     login_form = LoginForm()
     if 'login_form_login_errors' in session:
@@ -101,10 +108,11 @@ def login_handle():
             flash("Invalid credentials.", category="danger")
             return redirect(url_for('login'))
         if login_form.remember.data:
-            session['user'] = user.create_user_details()
+            login_user(user, remember=True)
             session.pop('login_form_login_value')
             flash("You successfully logged in.", category="success")
             return redirect(url_for("info"))
+        login_user(user, remember=False)
     session['login_form_login_errors'] = login_form.login.errors
     session['login_form_password_errors'] = login_form.password.errors
     return redirect(url_for('login'))
@@ -112,11 +120,11 @@ def login_handle():
 @app.route('/register', methods=['GET'])
 def register():
     data = [os.name, datetime.datetime.now(), request.user_agent]
-    if session.get('user') is not None:
+    if current_user.is_authenticated:
         return redirect(url_for('info'))
     form = RegisterForm()
     return render_template('register.html', form=form, data=data, menu=menu)
-@app.route('/register', methods=['GET'])
+
 
 @app.route('/register', methods=['POST'])
 def register_handle():
@@ -129,11 +137,7 @@ def register_handle():
     last_name = register_form.last_name.data
     email = register_form.email.data
     password = register_form.password.data
-    user = User(username=username)
-    user.first_name = first_name
-    user.last_name = last_name
-    user.email = email
-    user.user_password = password
+    user = User(username=username,first_name = first_name, last_name = last_name, email = email,user_password = password)
 
     db.session.add(user)
     db.session.commit()
@@ -141,60 +145,59 @@ def register_handle():
     return redirect(url_for('login'))
 
 @app.route('/info', methods=['GET', 'POST'])
+@login_required
 def info():
     data = [os.name, datetime.datetime.now(), request.user_agent]
     message=""
     cookies = {}
     change_password_form = ChangePasswordForm()
-    
-    if 'user' in session:
-        if 'form_cp_errors' in session:
-            change_password_form.new_password.errors = session.pop('form_cp_errors')
-        if request.method == 'POST':
-            key = request.form['key']
-            value = request.form['value']
-            expiration = request.form['expiration']  
-            cookies = request.cookies if request.cookies else {"none": "none"}
-            
-            if request.form['action'] == 'add':
-                message = "Cookie added successfully!"
-                response = make_response(render_template('info.html', username=session['user']['login'], cookies=cookies, data=data, menu=menu, message=message, change_password_form=change_password_form))
-                response.set_cookie(key, value, expires=datetime.datetime.strptime(expiration, '%Y-%m-%d'))
-                return response
-            elif request.form['action'] == 'delete':
-                if key == 'all':
-                    for key in request.cookies:
-                        response.set_cookie(key, '', expires=0)
-                    message = "All cookies deleted successfully!"
-                    response = make_response(render_template('info.html', username=session['user']['login'], cookies=cookies, data=data, menu=menu, message=message, change_password_form=change_password_form))
-                    return response
-                else:
-                    message = "Cookie deleted successfully!"
-                    response = make_response(render_template('info.html', username=session['user']['login'], cookies=cookies, data=data, menu=menu, message=message, change_password_form=change_password_form))
-                    response.set_cookie(key, '', expires=0)
-                    return response
+
+    if 'form_cp_errors' in session:
+        change_password_form.new_password.errors = session.pop('form_cp_errors')
+    if request.method == 'POST':
+        key = request.form['key']
+        value = request.form['value']
+        expiration = request.form['expiration']  
+        cookies = request.cookies if request.cookies else {"none": "none"}
         
-        return render_template('info.html', username=session['user']['login'], cookies=cookies, data=data, menu=menu, change_password_form=change_password_form)
-    return redirect(url_for('login'))
+        if request.form['action'] == 'add':
+            message = "Cookie added successfully!"
+            response = make_response(render_template('info.html', username=session['user']['login'], cookies=cookies, data=data, menu=menu, message=message, change_password_form=change_password_form))
+            response.set_cookie(key, value, expires=datetime.datetime.strptime(expiration, '%Y-%m-%d'))
+            return response
+        elif request.form['action'] == 'delete':
+            if key == 'all':
+                for key in request.cookies:
+                    response.set_cookie(key, '', expires=0)
+                message = "All cookies deleted successfully!"
+                response = make_response(render_template('info.html', username=session['user']['login'], cookies=cookies, data=data, menu=menu, message=message, change_password_form=change_password_form))
+                return response
+            else:
+                message = "Cookie deleted successfully!"
+                response = make_response(render_template('info.html', username=session['user']['login'], cookies=cookies, data=data, menu=menu, message=message, change_password_form=change_password_form))
+                response.set_cookie(key, '', expires=0)
+                return response
+    
+    return render_template('info.html', username=session['user']['login'], cookies=cookies, data=data, menu=menu, change_password_form=change_password_form)
+   
 
 @app.route('/change_password', methods=['POST'])
+@login_required
 def change_password():
     change_password_form = ChangePasswordForm()
     if change_password_form.validate_on_submit():
-        user_login = session['user']['login']
-        with open('users.json', 'r') as file:
-            data = json.load(file)
-        
         new_password = change_password_form.new_password.data
-        if data[user_login]['password'] == change_password_form.old_password.data:
-            data[user_login]['password'] = new_password
-            with open('users.json', 'w') as file:
-                json.dump(data, file)
-            flash("You successfully changed your password!", category="success")
+        old_password = change_password_form.old_password.data
 
-        
-        return redirect(url_for('info'))
-    session['form_cp_errors'] = change_password_form.new_password.errors
+        if current_user.verify_password(old_password):
+            current_user.user_password = new_password
+            db.session.commit()
+
+            flash("Successfully changed password.", category="success")
+            return redirect(url_for('info'))
+
+        flash("Incorrect old password.", category="error")
+        session['form_cp_errors'] = change_password_form.errors
     return redirect(url_for('info'))
 
 @app.route('/todo', methods=['GET'])
@@ -205,10 +208,10 @@ def todo():
 
 
 @app.route('/todo/add', methods=['GET', 'POST'])
+@login_required
 def add_task():
     data = [os.name, datetime.datetime.now(), request.user_agent]
-    if session.get('user') is None:
-        return redirect(url_for('login'))
+
     add_task_form = AddTask()
     if request.method == 'GET':
         return render_template('add_task.html', form=add_task_form, data=data, menu=menu)
@@ -230,10 +233,10 @@ def add_task():
 
 
 @app.route('/todo/<int:id>', methods=['GET'])
+@login_required
 def get_task(id=None):
     data = [os.name, datetime.datetime.now(), request.user_agent]
-    if session.get('user') is None:
-        return redirect(url_for('login'))
+    
     if id is None:
         return redirect(url_for('todo'))
 
@@ -244,10 +247,10 @@ def get_task(id=None):
 
 
 @app.route('/todo/<int:id>', methods=['POST'])
+@login_required
 def update_task(id=None):
     data = [os.name, datetime.datetime.now(), request.user_agent]
-    if session.get('user') is None:
-        return redirect(url_for('login'))
+    
     if id is None:
         return redirect(url_for('todo'))
 
@@ -274,9 +277,8 @@ def update_task(id=None):
 
 
 @app.route('/todo/<int:id>/delete')
+@login_required
 def delete_task(id=None):
-    if session.get('user') is None:
-        return redirect(url_for('login'))
     if id is None:
         return redirect(url_for('todo'))
 
@@ -304,7 +306,7 @@ def add_feedback():
     feedback = form.feedback.data
     satisfaction = Satisfaction[form.satisfaction.data]
 
-    user = None if session.get('user') is None else session['user']['login']
+    user = None if not current_user.is_authenticated else current_user.username
     entity = Feedback(feedback=feedback, satisfaction=satisfaction, user=user)
     db.session.add(entity)
     db.session.commit()
