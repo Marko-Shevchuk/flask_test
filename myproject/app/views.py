@@ -1,4 +1,4 @@
-from datetime import datetime
+import datetime
 import os
 from flask import render_template, request, redirect, url_for, make_response, session, flash
 from app import app
@@ -364,7 +364,7 @@ def add_feedback():
 @app.after_request
 def after_request(response):
     if current_user:
-        current_user.last_seen = datetime.now()
+        current_user.last_seen = datetime.datetime.now()
         try:
             db.session.commit()
         except:
