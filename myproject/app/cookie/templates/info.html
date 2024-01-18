@@ -9,25 +9,25 @@
       <p class="lead"></p>
       <p class="lead">You are definitely authorized.</p>
       <p class="lead">
-        <form action="{{ url_for('logout') }}" method="get">
+        <form action="{{ url_for('auth.logout') }}" method="get">
             <button type="submit">Logout</button>
         </form>
       </p>
       <h2>Add or Delete Cookies</h2>
-      <form action="{{ url_for('info') }}" method="post">
+      <form action="{{ url_for('cookie.info') }}" method="post">
         <input type="text" name="key" placeholder="Key">
         <input type="text" name="value" placeholder="Value">
         <input type="date" name="expiration" placeholder="Expiration Date">
         <button type="submit" name="action" value="add">Add Cookie</button>
       </form>
-      <form action="{{ url_for('info') }}" method="post">
+      <form action="{{ url_for('cookie.info') }}" method="post">
         <input type="text" name="key" placeholder="Key to delete, or 'all'">
         <button type="submit" name="action" value="delete">Delete Cookie</button>
       </form>
       <h2>Change Password</h2>
         <div style="height: 100%; display: flex; justify-content: center; align-items: center; flex-direction: column">
         <h1 class="mb-md-5">Change password</h1>
-        <form action="{{ url_for('change_password') }}" method="post"
+        <form action="{{ url_for('cookie.change_password') }}" method="post"
               style="display: flex; flex-direction: column; align-items: center">
             {{ change_password_form.csrf_token() }}
             <div class="row d-flex justify-content-center">
