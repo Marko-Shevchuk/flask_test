@@ -1,5 +1,5 @@
 The postgres drivers interfered with the hashing of passwords. The drivers encode to utf-8 one time too many, and this has to be reverted.
-![image](https://github.com/Marko-Shevchuk/flask_test/assets/126328450/1a0c67f3-4976-4372-a06f-f1642c795152)
+![image](https://github.com/Marko-Shevchuk/flask_test/assets/126328450/7423f2c6-b008-4e7c-9d1f-fff26da59892)
 ![image](https://github.com/Marko-Shevchuk/flask_test/assets/126328450/f8cbf11e-520a-4dda-a99f-f4e7cb3d465f)
 ![image](https://github.com/Marko-Shevchuk/flask_test/assets/126328450/b28be8d8-e7c4-4deb-bd3d-555175029542)
 ![image](https://github.com/Marko-Shevchuk/flask_test/assets/126328450/7d1b222c-3991-4485-bba0-04a6d6596096)
