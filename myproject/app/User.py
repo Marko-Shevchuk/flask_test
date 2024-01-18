@@ -1,4 +1,5 @@
 from flask_bcrypt import generate_password_hash, check_password_hash
+
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy import Integer, String
 
@@ -22,7 +23,7 @@ class User(db.Model):
 
     @user_password.setter
     def user_password(self, new_password):
-        self.password = generate_password_hash(new_password)
+        self.password = generate_password_hash(new_password).decode('utf8')
 
     def verify_password(self, password):
         return check_password_hash(self.password, password)

@@ -97,6 +97,8 @@ def login_handle():
         entered_login = login_form.login.data
         entered_password = login_form.password.data
         user = User.query.filter(User.username == entered_login).first()
+        print(f"Retrieved hashed password from database: {user.password}")
+        print(f"Entered password : {entered_password}")
         if not user or not user.verify_password(entered_password):
             flash("Invalid credentials.", category="danger")
             return redirect(url_for('login'))
@@ -116,7 +118,7 @@ def register():
         return redirect(url_for('info'))
     form = RegisterForm()
     return render_template('register.html', form=form, data=data, menu=menu)
-@app.route('/register', methods=['GET'])
+
 
 @app.route('/register', methods=['POST'])
 def register_handle():
@@ -129,12 +131,7 @@ def register_handle():
     last_name = register_form.last_name.data
     email = register_form.email.data
     password = register_form.password.data
-    user = User(username=username)
-    user.first_name = first_name
-    user.last_name = last_name
-    user.email = email
-    user.user_password = password
-
+    user = User(username=username,first_name = first_name, last_name = last_name, email = email,user_password = password)
     db.session.add(user)
     db.session.commit()
     flash(f"Successfully created account {register_form.username.data}.", category='success')
