@@ -96,7 +96,7 @@ def account():
     data = [os.name, datetime.datetime.now(), request.user_agent]
     form = UpdateUserForm()
     form.about_me.data = current_user.about_me
-    return render_template("account.html", data=data, menu=menu)
+    return render_template("account.html", form=form, data=data, menu=menu)
 
 @app.route('/account', methods=['POST'])
 @login_required
