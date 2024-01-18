@@ -38,4 +38,3 @@ with app.app_context():
     app.register_blueprint(general_bp)
     app.register_blueprint(auth_bp)
 
-from app import views

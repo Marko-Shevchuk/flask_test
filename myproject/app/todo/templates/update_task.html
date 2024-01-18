@@ -10,7 +10,7 @@
     <div class="largediv">
         
         <h1>Edit Task</h1>
-        <form action="{{ url_for('update_task', id=task.id) }}" method="post" class="w-50 mx-auto">
+        <form action="{{ url_for('todo.update_task', id=task.id) }}" method="post" class="w-50 mx-auto">
     {{ form.csrf_token() }}
 
     <div class="row mb-3">

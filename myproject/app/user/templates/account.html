@@ -46,7 +46,7 @@
 <div class="container-fluid text-center">
 
     <h1>Update account info</h1>
-    <form action="{{ url_for('update_account') }}" method="post"
+    <form action="{{ url_for('account.update_account') }}" method="post"
           class="row justify-content-center flex-column w-75 gap-3 mb-3 mx-auto" enctype="multipart/form-data">
         {{ form.csrf_token() }}
 

@@ -8,7 +8,7 @@ from app import db
 from app.domain.User import User
 from . import auth_bp
 from .forms import LoginForm, RegisterForm
-
+from app.general.controller import menu
 def upload_file(file):
     if not file:
         return
@@ -32,13 +32,13 @@ def delete_file(file_name):
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for("login"))
+    return redirect(url_for("auth.login"))
 
 
 @auth_bp.route('/login', methods=['GET'])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('info'))
+        return redirect(url_for('cookie.info'))
     data = [os.name, datetime.datetime.now(), request.user_agent]
     login_form = LoginForm()
     if 'login_form_login_errors' in session:
@@ -47,7 +47,7 @@ def login():
         login_form.password.errors = session.pop('login_form_password_errors')
     if 'login_form_login_value' in session:
         login_form.login.data = session.pop('login_form_login_value')
-    return render_template('login.html', data=data, menu=menu, login_form=login_form)
+    return render_template('auth/login.html', data=data, menu=menu, login_form=login_form)
 
 @auth_bp.route('/login', methods=['POST'])
 def login_handle():
@@ -59,16 +59,16 @@ def login_handle():
         user = User.query.filter(User.username == entered_login).first()
         if not user or not user.verify_password(entered_password):
             flash("Invalid credentials.", category="danger")
-            return redirect(url_for('login'))
+            return redirect(url_for('auth.login'))
         if login_form.remember.data:
             login_user(user, remember=True)
             session.pop('login_form_login_value')
             flash("You successfully logged in.", category="success")
-            return redirect(url_for("info"))
+            return redirect(url_for("cookie.info"))
         login_user(user, remember=False)
     session['login_form_login_errors'] = login_form.login.errors
     session['login_form_password_errors'] = login_form.password.errors
-    return redirect(url_for('login'))
+    return redirect(url_for('auth.login'))
 
 @auth_bp.route('/register', methods=['GET'])
 def register():
@@ -76,7 +76,7 @@ def register():
     if current_user.is_authenticated:
         return redirect(url_for('info'))
     form = RegisterForm()
-    return render_template('register.html', form=form, data=data, menu=menu)
+    return render_template('auth/register.html', form=form, data=data, menu=menu)
 
 
 @auth_bp.route('/register', methods=['POST'])
@@ -84,7 +84,7 @@ def register_handle():
     data = [os.name, datetime.datetime.now(), request.user_agent]
     register_form = RegisterForm()
     if not register_form.validate_on_submit():
-        return render_template('register.html', form=register_form, data=data, menu=menu)
+        return render_template('auth/register.html', form=register_form, data=data, menu=menu)
     username = register_form.username.data
     first_name = register_form.first_name.data
     last_name = register_form.last_name.data
@@ -97,4 +97,14 @@ def register_handle():
     db.session.add(user)
     db.session.commit()
     flash(f"Successfully created account {register_form.username.data}.", category='success')
-    return redirect(url_for('login'))
+    return redirect(url_for('auth.login'))
+
+@auth_bp.after_request
+def after_request(response):
+    if current_user:
+        current_user.last_seen = datetime.datetime.now()
+        try:
+            db.session.commit()
+        except:
+            flash(f"Error updating last seen time.", category='danger')
+    return response
