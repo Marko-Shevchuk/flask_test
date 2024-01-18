@@ -361,3 +361,12 @@ def add_feedback():
     flash(f"Successfully added feedback.", category="success")
     return redirect(url_for('feedback'))
 
+@app.after_request
+def after_request(response):
+    if current_user:
+        current_user.last_seen = datetime.now()
+        try:
+            db.session.commit()
+        except:
+            flash(f"Error updating last seen time.", category='danger')
+    return response
