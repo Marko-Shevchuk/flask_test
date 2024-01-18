@@ -31,7 +31,7 @@ with app.app_context():
     from .todo import todo_bp
     from .general import general_bp
     from .auth import auth_bp
-
+    from .post import post_bp
     
     app.register_blueprint(user_bp)
     app.register_blueprint(cookie_bp)
@@ -39,4 +39,4 @@ with app.app_context():
     app.register_blueprint(todo_bp)
     app.register_blueprint(general_bp)
     app.register_blueprint(auth_bp)
-
+    app.register_blueprint(post_bp, url_prefix='/post')
