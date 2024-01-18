@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% from "macros/_formRender.html" import render_field %}
+{% block title %}
+    Tags
+{% endblock %}
+{% block body %}
+    {% if current_user.is_authenticated %}
+        <a href="{{ url_for('post.tag.create_tag') }}" role="button" tabindex="-1"
+           class="w-25 mx-auto mt-2 btn btn-primary mb-4">Add Tag</a>
+    {% endif %}
+    <div style="height: 100%; display: flex; justify-content: center; align-items: center; flex-direction: column; gap: 1rem; background-color: #fff4e0; padding: 1rem; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+
+        <h1>All Tags</h1>
+        <div class="container-sm w-75 mt-4">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for tag in tags %}
+                    <tr>
+                        <th scope="row">{{ loop.index }}</th>
+                        <td><button type="button" class="btn btn-secondary"> {{ tag.name }} </button></td>
+                        <td>
+                            <div class="btn-group" role="group" aria-label="Tag Actions">
+                                <a href="{{ url_for('post.tag.update_tag', id=tag.id) }}" class="btn btn-primary">
+                                    Update
+                                </a>
+                                <a href="{{ url_for('post.tag.delete_tag', id=tag.id) }}" class="btn btn-danger">
+                                    Delete
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

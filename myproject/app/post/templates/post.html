@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% from "macros/_formRender.html" import render_field %}
+{% block title %}
+    Users
+{% endblock %}
+{% block body%}
+    <div class="container-fluid text-center mt-3">
+        <div class="row justify-content-center">
+            <div class="col-md-3 mb-3">
+                <img style="width: 15rem; height: 15rem" class="rounded-circle img-fluid"
+                     src="{{ url_for('static', filename='/images/' + post.image) }}"
+                     alt="">
+            </div>
+            <div class="col-md-5 mb-3">
+                <h1>{{ post.title }}</h1>
+
+                <div style="margin-top: 1rem; display: flex; flex-direction: column; gap: .2rem; align-items: center;">
+                    <div class="input-group w-75 mb-3">
+                        <button disabled class="w-25 btn btn-outline-secondary" type="button" id="button-phone">
+                            Type
+                        </button>
+                        <input disabled type="text" class="form-control"
+                               value="{{ to_readable(post.type.value) }}">
+                    </div>
+                    <div class="input-group w-75 mb-3">
+                        <button disabled class="w-25 btn btn-outline-secondary" type="button" id="button-phone">
+                            Category
+                        </button>
+                        <input disabled type="text" class="form-control"
+                               value="{{ post.category.name }}">
+                    </div>
+                    <div class="input-group w-75 mb-3">
+                        <button disabled class="w-25 btn btn-outline-secondary" type="button" id="button-phone">
+                            Tags
+                        </button>
+                        {% for tag in post.tags %}
+                            <button type="button"
+                                    class="btn btn-{{ tag.color.value.lower() }}"> {{ tag.name }} </button>
+                        {% endfor %}
+                    </div>
+                    <div class="input-group w-75 mb-3">
+                        <textarea class="form-control" cols="50" rows="10" style="resize: none"
+                                  disabled>{{ post.text }}</textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <a href="{{ url_for('post.post_list') }}" class="btn btn-secondary mb-3">Back</a>
+    </div>
+{% endblock %}
