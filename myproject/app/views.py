@@ -5,9 +5,9 @@ from app import app
 import json
 from app import db
 from app.forms import LoginForm, ChangePasswordForm, AddTask, UpdateTask, AddFeedback, RegisterForm
-from app.domain.Todo import Task, Status
-from app.domain.Feedback import Satisfaction, Feedback
-from app.domain.User import User
+from app.Todo import Task, Status
+from app.Feedback import Satisfaction, Feedback
+from app.User import User
 
 with open('users.json') as f:
     users = json.load(f)
