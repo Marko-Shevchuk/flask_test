@@ -1,9 +1,9 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, PasswordField, BooleanField, TextAreaField, SelectField, RadioField, EmailField, DateField, FileField
 from wtforms.validators import DataRequired, Length, EqualTo, ValidationError, Regexp
-from .domain.Todo import *
-from .domain.Feedback import *
-from .domain.User import *
+from app.domain.Todo import *
+from app.domain.Feedback import *
+from app.domain.User import *
 class LoginForm(FlaskForm):
     login = StringField("Login",
                         render_kw={"placeholder": "Login"},
