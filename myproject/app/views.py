@@ -19,6 +19,7 @@ menu = {
     'Skills': 'skills',
     'Register': 'register',
     'Login': 'login',
+    'Account': 'account',
     'Information': 'info',
     'Todo': 'todo',
     'Feedback': 'feedback',
@@ -68,7 +69,11 @@ def cookie():
 
     return render_template("read_cookie.html", userID=userId)
 
-
+@app.route('/account', methods=["GET"])
+@login_required
+def account():
+    data = [os.name, datetime.datetime.now(), request.user_agent]
+    return render_template("account.html", data=data, menu=menu)
 
 @app.route('/logout', methods=["GET"])
 @login_required
