@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% from "macros/_formRender.html" import render_field %}
+{% block title %}
+    Feedback
+{% endblock %}
+{{ super() }}
+
+{% block body %}
+
+    <style>
+        tr:nth-child(even) {
+            background-color: #ffe4e1; 
+        }
+
+        tr:nth-child(odd) {
+            background-color: #fffacd; 
+        }
+        li {
+            list-style: none;
+        }
+        
+    </style>
+    <div class="largediv">
+    <h1>Publish feedback</h1>
+    <form action="{{ url_for('add_feedback') }}" method="post" class="w-50 mx-auto gap-4">
+        {{ form.csrf_token() }}
+        <div class="mb-3">
+            {{ render_field(form.feedback, class='form-control') }}
+        </div>
+        <div class="mb-3 text-center">
+            {{ render_field(form.satisfaction, class='form-check', add_label=True, label_class='form-check-label') }}
+        </div>
+        <div class="mb-3 text-center">
+            {{ form.submit() }}
+        </div>
+    </form>
+
+        <hr>
+        <h1>Feedbacks</h1>
+    <div class="container-sm w-50">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Comment</th>
+                    <th scope="col">Satisfaction</th>
+                    <th scope="col">User</th>
+                    <th scope="col">Published at</th>
+                    
+                </tr>
+            </thead>
+            <tbody>
+                {% for feedback in feedbacks %}
+                    <tr>
+                        <th scope="row">{{ loop.index }}</th>
+                        <td><span style="max-width: 20rem; display: inline-block;" class="text-truncate">{{ feedback.feedback }}</span></td>
+                        <td>{{ feedback.satisfaction.value.lower().capitalize() }}</td>
+                        <td>{% if feedback.user != None %}{{ feedback.user }}{% else %}#{% endif %}</td>
+                        <td>{% if feedback.created_at != None %}{{ feedback.created_at }}{% else %}#{% endif %}</td>
+
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    </div>
+{% endblock %}

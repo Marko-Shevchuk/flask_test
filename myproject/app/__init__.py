@@ -1,5 +1,5 @@
 from flask import Flask
-
+from flask_login import LoginManager
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 
@@ -16,11 +16,8 @@ def create_app():
 
 app=create_app()
 Migrate(app, db)
-
-
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String())
-    password = db.Column(db.String())
+login_manager = LoginManager(app)
+login_manager.login_view = 'login'
+login_manager.login_message_category = 'info'
 
 from app import views

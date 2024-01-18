@@ -6,12 +6,21 @@
 {{ super() }}
 
 {% block body %}
-
-    <div style="height: 100%; display: flex; justify-content: center; align-items: center; flex-direction: column; gap: 3rem">
+<style>
+    form {
+        background-color: lightyellow;
+        padding: 10px;
+        border-radius: 10px;
+        margin: auto;
+        margin-top: 5px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+</style>
+    <div class="largediv">
         
         <h1>Add Task</h1>
         <form action="{{ url_for('add_task') }}" method="post"
-              class="row d-flex justify-content-center w-80 gap-1">
+              class="row d-flex justify-content-center w-75 gap-1">
             {{ form.csrf_token() }}
             <div class="row d-flex justify-content-center">
                 <div class="col-md-11">
