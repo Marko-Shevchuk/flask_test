@@ -19,7 +19,7 @@ Log in
     {{ super() }}
 
     <h1>Log in</h1>
-    <form action="{{ url_for('login_handle')}}" method="post" class="w-50 gap-3 needs-validation" novalidate>
+    <form action="{{ url_for('auth.login_handle')}}" method="post" class="w-50 gap-3 needs-validation" novalidate>
         {{ login_form.csrf_token() }}
 
         <div class="mb-3">
