@@ -6,21 +6,7 @@ from app import db
 from . import cookie_bp
 from app.general.controller import menu
 
-@cookie_bp.route('/setcookie', methods=["GET"])
-def cookie():
-    data = [os.name, datetime.datetime.now(), request.user_agent]
-    if request.args.get("userId"):
-        user_value = request.args.get("userId") #101
-        session["userId"] = user_value
-        resp = make_response(f"Hi, set cookie {user_value}")
-        resp.set_cookie("userId", user_value)
-        return resp
-    print(session.get("userId"))
-    userId = request.cookies.get("userId")
-    if not userId:
-        userId = session.get("userId")
 
-    return render_template("cookie/read_cookie.html", userID=userId, data=data, menu=menu)
 
 @cookie_bp.route('/info', methods=['GET', 'POST'])
 @login_required
@@ -40,7 +26,7 @@ def info():
         
         if request.form['action'] == 'add':
             message = "Cookie added successfully!"
-            response = make_response(render_template('cookie/info.html', username=session['user']['login'], cookies=cookies, data=data, menu=menu, message=message, change_password_form=change_password_form))
+            response = make_response(render_template('info.html', username=session['user']['login'], cookies=cookies, data=data, menu=menu, message=message, change_password_form=change_password_form))
             response.set_cookie(key, value, expires=datetime.datetime.strptime(expiration, '%Y-%m-%d'))
             return response
         elif request.form['action'] == 'delete':
@@ -48,15 +34,15 @@ def info():
                 for key in request.cookies:
                     response.set_cookie(key, '', expires=0)
                 message = "All cookies deleted successfully!"
-                response = make_response(render_template('cookie/info.html', username=session['user']['login'], cookies=cookies, data=data, menu=menu, message=message, change_password_form=change_password_form))
+                response = make_response(render_template('info.html', username=session['user']['login'], cookies=cookies, data=data, menu=menu, message=message, change_password_form=change_password_form))
                 return response
             else:
                 message = "Cookie deleted successfully!"
-                response = make_response(render_template('cookie/info.html', username=session['user']['login'], cookies=cookies, data=data, menu=menu, message=message, change_password_form=change_password_form))
+                response = make_response(render_template('info.html', username=session['user']['login'], cookies=cookies, data=data, menu=menu, message=message, change_password_form=change_password_form))
                 response.set_cookie(key, '', expires=0)
                 return response
     
-    return render_template('cookie/info.html', username=session['user']['login'], cookies=cookies, data=data, menu=menu, change_password_form=change_password_form)
+    return render_template('info.html', username=session['user']['login'], cookies=cookies, data=data, menu=menu, change_password_form=change_password_form)
    
 @cookie_bp.route('/change_password', methods=['POST'])
 @login_required
@@ -71,7 +57,7 @@ def change_password():
             db.session.commit()
 
             flash("Successfully changed password.", category="success")
-            return redirect(url_for('info'))
+            return redirect(url_for('cookie.info'))
 
         flash("Incorrect old password.", category="error")
         session['form_cp_errors'] = change_password_form.errors

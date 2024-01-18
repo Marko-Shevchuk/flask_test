@@ -13,7 +13,7 @@ def feedback():
     data = [os.name, datetime.datetime.now(), request.user_agent]
     form = AddFeedback()
     feedbacks = Feedback.query.all()
-    return render_template('feedback/feedback.html', form=form, feedbacks=feedbacks, data=data, menu=menu)
+    return render_template('feedback.html', form=form, feedbacks=feedbacks, data=data, menu=menu)
 
 
 @feedback_bp.route('/feedback', methods=['POST'])
@@ -21,7 +21,7 @@ def add_feedback():
     data = [os.name, datetime.datetime.now(), request.user_agent]
     form = AddFeedback()
     if not form.validate_on_submit():
-        return render_template('feedback/feedback.html', form=form, data=data, menu=menu)
+        return render_template('feedback.html', form=form, data=data, menu=menu)
 
     feedback = form.feedback.data
     satisfaction = Satisfaction[form.satisfaction.data]

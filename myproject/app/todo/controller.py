@@ -36,7 +36,7 @@ def add_task():
         db.session.commit()
         flash(f"Successfully created task {task_name}", category='success')
         return redirect(url_for('todo.todo'))
-    return render_template('todo/add_task.html', form=add_task_form, data=data, menu=menu)
+    return render_template('add_task.html', form=add_task_form, data=data, menu=menu)
 
 
 @todo_bp.route('/todo/<int:id>', methods=['GET'])
@@ -50,7 +50,7 @@ def get_task(id=None):
     task = db.get_or_404(Task, id)
     update_form = UpdateTask()
     update_form.status.default = task.status.value
-    return render_template('todo/update_task.html', task=task, form=update_form, data=data, menu=menu)
+    return render_template('update_task.html', task=task, form=update_form, data=data, menu=menu)
 
 
 @todo_bp.route('/todo/<int:id>', methods=['POST'])
@@ -64,7 +64,7 @@ def update_task(id=None):
     task = db.get_or_404(Task, id)
     update_form = UpdateTask()
     if not update_form.validate_on_submit():
-        return render_template('todo/update_task.html', task=task, form=update_form, data=data, menu=menu)
+        return render_template('update_task.html', task=task, form=update_form, data=data, menu=menu)
 
     name = update_form.name.data
     description = update_form.description.data

@@ -12,6 +12,8 @@ def create_app():
     app = Flask(__name__)
     profile = Config.get_profile()
     app.config.from_object(profile)
+    app.secret_key = profile.get_secret_key()
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.init_app(app) #
     return app

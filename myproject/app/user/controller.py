@@ -14,7 +14,7 @@ def account():
     data = [os.name, datetime.datetime.now(), request.user_agent]
     form = UpdateUserForm()
     form.about_me.data = current_user.about_me
-    return render_template("user/account.html", form=form, data=data, menu=menu)
+    return render_template("account.html", form=form, data=data, menu=menu)
 
 @user_bp.route('/account', methods=['POST'])
 @login_required
@@ -22,7 +22,7 @@ def update_account():
     data = [os.name, datetime.datetime.now(), request.user_agent]
     form = UpdateUserForm()
     if not form.validate_on_submit():
-        return render_template('user/account.html', form=form, data=data, menu=menu)
+        return render_template('account.html', form=form, data=data, menu=menu)
 
     current_user.username = form.username.data
     current_user.email = form.email.data

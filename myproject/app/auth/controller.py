@@ -47,7 +47,7 @@ def login():
         login_form.password.errors = session.pop('login_form_password_errors')
     if 'login_form_login_value' in session:
         login_form.login.data = session.pop('login_form_login_value')
-    return render_template('auth/login.html', data=data, menu=menu, login_form=login_form)
+    return render_template('login.html', data=data, menu=menu, login_form=login_form)
 
 @auth_bp.route('/login', methods=['POST'])
 def login_handle():
@@ -74,9 +74,9 @@ def login_handle():
 def register():
     data = [os.name, datetime.datetime.now(), request.user_agent]
     if current_user.is_authenticated:
-        return redirect(url_for('info'))
+        return redirect(url_for('cookie.info'))
     form = RegisterForm()
-    return render_template('auth/register.html', form=form, data=data, menu=menu)
+    return render_template('register.html', form=form, data=data, menu=menu)
 
 
 @auth_bp.route('/register', methods=['POST'])
@@ -84,7 +84,7 @@ def register_handle():
     data = [os.name, datetime.datetime.now(), request.user_agent]
     register_form = RegisterForm()
     if not register_form.validate_on_submit():
-        return render_template('auth/register.html', form=register_form, data=data, menu=menu)
+        return render_template('register.html', form=register_form, data=data, menu=menu)
     username = register_form.username.data
     first_name = register_form.first_name.data
     last_name = register_form.last_name.data

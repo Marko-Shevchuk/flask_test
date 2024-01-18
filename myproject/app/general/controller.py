@@ -4,17 +4,17 @@ my_skills = ['Java', 'PHP', 'C++', 'MySQL','MPICH','OpenMP', 'JavaScript', 'Pyth
 import os, datetime
 
 menu = {
-    'Homepage': 'home',
-    'Posts': 'posts',
-    'About': 'about',
-    'Skills': 'skills',
-    'Register': 'register',
-    'Login': 'login',
-    'Account': 'account',
-    'Information': 'info',
-    'Todo': 'todo',
-    'Feedback': 'feedback',
-    'Logout': 'logout'
+    'Homepage': 'general.home',
+    'Posts': 'general.posts',
+    'About': 'general.about',
+    'Skills': 'general.skills',
+    'Register': 'auth.register',
+    'Login': 'auth.login',
+    'Account': 'user.account',
+    'Information': 'cookie.info',
+    'Todo': 'todo.todo',
+    'Feedback': 'feedback.feedback',
+    'Logout': 'auth.logout'
 }
 
 
