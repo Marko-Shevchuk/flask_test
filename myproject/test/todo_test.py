@@ -1,7 +1,7 @@
 from flask import url_for
 from flask_login import login_user
 
-from app.domain.Task import Status
+from app.domain.Todo import Status
 from app.domain.User import User
 from test.base_test import BaseTest
 

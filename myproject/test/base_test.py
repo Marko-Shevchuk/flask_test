@@ -51,5 +51,5 @@ class BaseTest(TestCase):
             db.session.commit()
 
 
-if __name__ == 'main':
+if __name__ == '__main__':
     unittest.main()
