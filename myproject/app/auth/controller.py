@@ -96,7 +96,7 @@ def register_handle():
 
     db.session.add(user)
     db.session.commit()
-    flash(f"Successfully created account {register_form.username.data}.", category='success')
+    flash("Successfully created account", category='success')
     return redirect(url_for('auth.login'))
 
 @auth_bp.after_request

@@ -1,0 +1,18 @@
+[
+    {
+      "username": "adam",
+      "first_name": "Cool",
+      "last_name": "Guy",
+      "password": "12345Gee",
+      "email": "adam@gmail.com",
+      "about_me": "Something about him"
+    },
+    {
+      "username": "user2",
+      "first_name": "User2Firstname",
+      "last_name": "User2Lastname",
+      "password": "12345Jeez",
+      "email": "user2@mail.com",
+      "about_me": "he's literally me"
+    }
+  ]
