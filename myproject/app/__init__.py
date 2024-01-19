@@ -36,6 +36,7 @@ with app.app_context():
     from .post import post_bp
     from .todo_rest import todo_rest_bp
     from .api import api
+    from app.swagger import swagger_bp
     app.register_blueprint(user_bp)
     app.register_blueprint(cookie_bp)
     app.register_blueprint(feedback_bp)
@@ -45,3 +46,4 @@ with app.app_context():
     app.register_blueprint(post_bp, url_prefix='/post')
     app.register_blueprint(todo_rest_bp, url_prefix='/api/todo')
     app.register_blueprint(api, url_prefix="/api")
+    app.register_blueprint(swagger_bp)
