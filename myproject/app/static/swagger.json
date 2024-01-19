@@ -1,0 +1,187 @@
+{
+    "swagger": "2.0",
+    "info": {
+      "title": "User API",
+      "version": "1.0",
+      "description": "API for managing users"
+    },
+    "basePath": "/api",
+    "schemes": [
+      "http"
+    ],
+    "paths": {
+      "/docs": {
+        "get": {
+          "summary": "Swagger UI",
+          "description": "Swagger UI for API documentation",
+          "produces": [
+            "text/html"
+          ],
+          "responses": {
+            "200": {
+              "description": "Swagger UI page"
+            }
+          }
+        }
+      },
+      "/user/{id}": {
+        "get": {
+          "summary": "Get user by ID",
+          "tags": ["User"],
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "type": "integer",
+              "description": "ID of the user"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "User details",
+              "schema": {
+                "$ref": "#/definitions/User"
+              }
+            }
+          }
+        },
+        "put": {
+          "summary": "Update user by ID",
+          "tags": ["User"],
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "type": "integer",
+              "description": "ID of the user"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Updated user details",
+              "schema": {
+                "$ref": "#/definitions/User"
+              }
+            }
+          }
+        },
+        "delete": {
+          "summary": "Delete user by ID",
+          "tags": ["User"],
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "type": "integer",
+              "description": "ID of the user"
+            }
+          ],
+          "responses": {
+            "204": {
+              "description": "User deleted successfully"
+            }
+          }
+        }
+      },
+      "/user": {
+        "post": {
+          "summary": "Create a new user",
+          "tags": ["User"],
+          "parameters": [
+            {
+              "name": "body",
+              "in": "body",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/UserCreateSchema"
+              }
+            }
+          ],
+          "responses": {
+            "201": {
+              "description": "New user created",
+              "schema": {
+                "$ref": "#/definitions/User"
+              }
+            }
+          }
+        }
+      },
+      "/users/list": {
+        "get": {
+          "summary": "Get a list of all users",
+          "tags": ["User"],
+          "responses": {
+            "200": {
+              "description": "List of users",
+              "schema": {
+                "$ref": "#/definitions/UserList"
+              }
+            }
+          }
+        }
+      }
+    },
+    "definitions": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "username": {
+            "type": "string"
+          },
+          "first_name": {
+            "type": "string"
+          },
+          "last_name": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "about_me": {
+            "type": "string"
+          }
+        }
+      },
+      "UserList": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/User"
+        }
+      },
+      "UserCreateSchema": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string"
+          },
+          "first_name": {
+            "type": "string"
+          },
+          "last_name": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "about_me": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+  

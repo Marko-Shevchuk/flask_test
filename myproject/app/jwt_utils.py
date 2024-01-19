@@ -24,8 +24,6 @@ class JWTUtils:
         @wraps(func)
         def wrapper(*args, **kwargs):
             token = request.headers.get('Authorization')
-            print("GIGA NIGGA ")
-            print(token)
             if not token:
                 return {'error': 'Token was not found'}, 401
 
