@@ -37,6 +37,7 @@ class TestProfile(Config):
     TESTING = True
     SQLALCHEMY_DATABASE_URI = 'sqlite:///site.db'
     ENV_NAME = 'test'
+    DEBUG = True
 
 
 class ProdProfile(Config):
