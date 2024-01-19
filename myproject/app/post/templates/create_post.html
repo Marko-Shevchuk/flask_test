@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% from "macros/_formRender.html" import render_field %}
+{% block title %}
+    Create post
+{% endblock %}
+{% block body%}
+    <style>
+        li {
+            list-style: none;
+        }
+
+        
+    </style>
+    <div class="largediv">
+        <h1 class="mb-5">Add Post</h1>
+        <form action="{{ url_for('post.create_post_handle') }}" method="post"
+              class="w-50 gap-3 mx-auto mb-5" enctype="multipart/form-data">
+            {{ form.csrf_token }}
+            <div class="mb-3">
+                <div class="col-md-10">
+                    {{ render_field(form.title, class='form-control') }}
+                </div>
+            </div>
+            <div class="mb-3">
+                <div class="col-md-10">
+                    {{ render_field(form.text, class='form-control') }}
+                </div>
+            </div>
+            <div class="mb-3">
+                <div class="col-md-5">
+                    {{ render_field(form.type, class='form-select', add_label=True, label_class='form-label') }}
+                </div>
+            </div>
+            <div class="mb-3">
+                <div class="col-md-5">
+                    {{ render_field(form.categories, class='form-select', add_label=True, label_class='form-label') }}
+                </div>
+            </div>
+            <div class="mb-3">
+                <div class="col-md-7">
+                    {{ render_field(form.tags, class='form-select', add_label=True, label_class='form-label') }}
+                </div>
+            </div>
+            <div class="mb-3">
+                <div class="col-auto mx-auto form-check text-center">
+                    {{ render_field(form.enabled, class='form-check-input', add_label=True, label_class='form-label') }}
+                </div>
+            </div>
+            <div class="mb-3">
+                <div class="col-md-10">
+                    {{ render_field(form.image, class='form-control', add_label=True, label_class='form-label') }}
+                </div>
+            </div>
+            <div class="mb-5">
+                <div class="col-auto">
+                    <button class="btn btn-primary">
+                        Submit
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}

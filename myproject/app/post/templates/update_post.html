@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% from "macros/_formRender.html" import render_field %}
+{% block title %}
+    Users
+{% endblock %}
+{% block body %}
+    <style>
+        li {
+            list-style: none;
+        }
+
+        .form-container {
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 1rem;
+            background-color: #fff4e0;
+            padding: 1rem;
+            border-radius: 5px; 
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 2rem;
+        }
+    </style>
+
+    <div class="form-container">
+
+        <h1>Update Post</h1>
+        <form action="{{ url_for('post.update_post_handle', id=post.id) }}" method="post"
+              class="w-50 gap-3" enctype="multipart/form-data">
+            {{ form.hidden_tag() }}
+            <div class="mb-3">
+                <div class="col-md-10">
+                    {{ render_field(form.title, class='form-control', value=form.title.data or post.title) }}
+                </div>
+            </div>
+            <div class="mb-3">
+                <div class="col-md-10">
+                    {{ render_field(form.text, class='form-control') }}
+                </div>
+            </div>
+            <div class="mb-3">
+                <div class="col-md-5">
+                    {{ render_field(form.type, class='form-select', add_label=True, label_class='form-label') }}
+                </div>
+            </div>
+            <div class="mb-3">
+                <div class="col-md-5">
+                    {{ render_field(form.categories, class='form-select', add_label=True, label_class='form-label') }}
+                </div>
+            </div>
+            <div class="mb-3">
+                <div class="col-md-7">
+                    {{ render_field(form.tags, class='form-select', add_label=True, label_class='form-label') }}
+                </div>
+            </div>
+            <div class="mb-3">
+                <div class="col-auto mx-auto form-check text-center">
+                    {{ render_field(form.enabled, class='form-check-input', value=form.enabled.data or post.enabled, add_label=True, label_class='form-label') }}
+                </div>
+            </div>
+            <div class="mb-3">
+                <div class="col-md-10">
+                    {{ render_field(form.image, class='form-control', add_label=True, label_class='form-label') }}
+                </div>
+            </div>
+            <div class="mb-3">
+                <div class="col-auto">
+                    <button class="btn btn-primary">
+                        Submit
+                    </button>
+                </div>
+            </div>
+        </form>
+        <a href="{{ url_for('post.post_list') }}" class="btn btn-secondary mt-3">Back</a>
+    </div>
+{% endblock %}
