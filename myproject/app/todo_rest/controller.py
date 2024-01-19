@@ -2,16 +2,19 @@ from flask import jsonify, make_response, abort, request
 
 from app import db
 from app.domain.Todo import Task, Status
+from app.jwt_utils import JWTUtils
 from . import todo_rest_bp
 
 
 @todo_rest_bp.errorhandler(404)
+@JWTUtils.verify_token
 def not_found(error):
     message = error.description['message'] or 'Could not find resource.'
     return make_response(jsonify({'error': message})), 404
 
 
 @todo_rest_bp.route('/<int:id>', methods=['GET'])
+@JWTUtils.verify_token
 def get_task(id=None):
     task = Task.query.get(id)
     if not task:
@@ -21,11 +24,12 @@ def get_task(id=None):
 
 @todo_rest_bp.route("/", methods=['GET'])
 @todo_rest_bp.route("/list", methods=['GET'])
+@JWTUtils.verify_token
 def task_list():
     return jsonify([task.to_dict() for task in Task.query.all()]), 200
 
-
 @todo_rest_bp.route("/", methods=['POST'])
+@JWTUtils.verify_token
 def create_task():
     json = request.json
     task_name = json['name']
@@ -39,6 +43,7 @@ def create_task():
 
 
 @todo_rest_bp.route("/<int:id>", methods=['PUT'])
+@JWTUtils.verify_token
 def update_task(id=None):
     json = request.json
 
@@ -64,6 +69,7 @@ def update_task(id=None):
 
 
 @todo_rest_bp.route('/<int:id>', methods=['DELETE'])
+@JWTUtils.verify_token
 def delete_task(id=None):
     task: Task = Task.query.get(id)
     if not task:
