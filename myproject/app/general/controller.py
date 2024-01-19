@@ -5,7 +5,7 @@ import os, datetime
 
 menu = {
     'Homepage': 'general.home',
-    'Posts': 'general.posts',
+    'Posts': 'general.pos',
     'About': 'general.about',
     'Skills': 'general.skills',
     'Register': 'auth.register',
@@ -14,7 +14,7 @@ menu = {
     'Information': 'cookie.info',
     'Todo': 'todo.todo',
     'Feedback': 'feedback.feedback',
-    'Posts': 'post.post_list',
+    'User Posts': 'post.post_list',
     'Categories': 'post.category.category_list',
     'Tags': 'post.tag.tag_list',
     'Logout': 'auth.logout'
@@ -26,10 +26,10 @@ def home():
     data = [os.name, datetime.datetime.now(), request.user_agent]
     return render_template('home.html', data=data, menu=menu)
 
-@general_bp.route('/posts')
-def posts():
+@general_bp.route('/pos')
+def pos():
     data = [os.name, datetime.datetime.now(), request.user_agent]
-    return render_template('posts.html', data=data, menu=menu)
+    return render_template('pos.html', data=data, menu=menu)
 
 @general_bp.route('/about')
 def about():
