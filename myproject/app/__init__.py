@@ -32,7 +32,7 @@ with app.app_context():
     from .general import general_bp
     from .auth import auth_bp
     from .post import post_bp
-    
+    from .todo_rest import todo_rest_bp
     app.register_blueprint(user_bp)
     app.register_blueprint(cookie_bp)
     app.register_blueprint(feedback_bp)
@@ -40,3 +40,4 @@ with app.app_context():
     app.register_blueprint(general_bp)
     app.register_blueprint(auth_bp)
     app.register_blueprint(post_bp, url_prefix='/post')
+    app.register_blueprint(todo_rest_bp, url_prefix='/api/todo')

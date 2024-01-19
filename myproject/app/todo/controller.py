@@ -49,7 +49,7 @@ def get_task(id=None):
 
     task = db.get_or_404(Task, id)
     update_form = UpdateTask()
-    update_form.status.default = task.status.value
+    update_form.status.default = task.status.name
     return render_template('update_task.html', task=task, form=update_form, data=data, menu=menu)
 
 
